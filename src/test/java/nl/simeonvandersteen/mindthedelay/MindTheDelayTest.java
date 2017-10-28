@@ -2,10 +2,12 @@ package nl.simeonvandersteen.mindthedelay;
 
 import com.google.common.collect.ImmutableList;
 import nl.simeonvandersteen.mindthedelay.domain.DelayedJourney;
+import nl.simeonvandersteen.mindthedelay.domain.ExpectedJourney;
 import nl.simeonvandersteen.mindthedelay.domain.Journey;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -22,13 +24,15 @@ public class MindTheDelayTest {
     @Mock
     private JourneyParser journeyParser;
     @Mock
+    private ExpectedJourneyProvider expectedJourneyProvider;
+    @Mock
     private DelayFilter delayFilter;
     @Mock
     private JourneyReporter journeyReporter;
 
     @Before
     public void setUp() throws Exception {
-        underTest = new MindTheDelay(journeyParser, delayFilter, journeyReporter);
+        underTest = new MindTheDelay(journeyParser, expectedJourneyProvider, delayFilter, journeyReporter);
     }
 
     @Test
@@ -46,6 +50,23 @@ public class MindTheDelayTest {
 
         verify(journeyReporter).report(delayedJourney1);
         verifyNoMoreInteractions(journeyReporter);
+    }
+
+    @Test
+    public void itAnalysesJourneysBeforeFiltering() throws Exception {
+        Journey journey1 = mock(Journey.class);
+        Journey journey2 = mock(Journey.class);
+
+        when(journeyParser.parse()).thenReturn(ImmutableList.of(journey1, journey2));
+
+        underTest.showDelayedJourneys();
+
+        InOrder inOrder = inOrder(expectedJourneyProvider, delayFilter);
+
+        inOrder.verify(expectedJourneyProvider).analyse(journey1);
+        inOrder.verify(expectedJourneyProvider).analyse(journey2);
+        inOrder.verify(delayFilter).getIfDelayed(journey1);
+        inOrder.verify(delayFilter).getIfDelayed(journey2);
     }
 
     @Test

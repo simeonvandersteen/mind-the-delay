@@ -3,6 +3,7 @@ package nl.simeonvandersteen.mindthedelay.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.Duration;
+import java.time.LocalTime;
 
 public class ExpectedJourney {
 
@@ -35,5 +36,11 @@ public class ExpectedJourney {
     public boolean matches(Journey journey) {
         return origin.equals(journey.getOrigin()) && destination.equals(journey.getDestination()) ||
                 origin.equals(journey.getDestination()) && destination.equals(journey.getOrigin());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s to %s: %s",
+                origin, destination, LocalTime.MIN.plusMinutes(journeyTime));
     }
 }

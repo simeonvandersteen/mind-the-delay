@@ -1,17 +1,16 @@
 package nl.simeonvandersteen.mindthedelay;
 
+import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
 import java.time.Duration;
+import java.util.Optional;
 
 public class Args {
 
-    @Option(name = "-c", aliases = "--journey-times-config", required = true, usage = "Path to expected journey duration configuration", metaVar = "FILE")
+    @Option(name = "-c", aliases = "--journey-times-config", usage = "File with expected journey durations in JSON format", metaVar = "FILE")
     private File journeyTimesConfig;
-
-    @Option(name = "-j", aliases = "--journey-history", required = true, usage = "Path to CSV journey history", metaVar = "FILE")
-    private File journeyHistory;
 
     @Option(name = "-m", aliases = "--minimum-delay", usage = "Minimum delay in minutes for a journey to be considered as delayed")
     private int minimumDelay = 15;
@@ -19,8 +18,11 @@ public class Args {
     @Option(name = "-h", aliases = "--help", help = true, hidden = true)
     private boolean showUsage = false;
 
-    public File getJourneyTimesConfig() {
-        return journeyTimesConfig;
+    @Argument(required = true, usage = "File containing journey history in CSV format", metaVar = "FILE")
+    private File journeyHistory;
+
+    public Optional<File> getJourneyTimesConfig() {
+        return Optional.ofNullable(journeyTimesConfig);
     }
 
     public File getJourneyHistory() {

@@ -5,8 +5,8 @@
     "journey_time": 10
   },
   {
-    "origin": "c",
-    "destination": "b",
+    "origin": "b",
+    "destination": "c",
     "journey_time": 5
   }
 ]

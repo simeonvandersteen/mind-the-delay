@@ -2,8 +2,6 @@ package nl.simeonvandersteen.mindthedelay;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.PrintStream;
 
@@ -11,9 +9,15 @@ public class Main {
 
     private void run(Args args) {
         JourneyParser journeyParser = new JourneyParser(args.getJourneyHistory());
-        DelayFilter delayFilter = DelayFilter.fromJson(args.getJourneyTimesConfig(), args.getMinimumDelay());
+
+        ExpectedJourneyProvider expectedJourneyProvider = args.getJourneyTimesConfig().isPresent() ?
+                ExpectedJourneyProvider.fromJson(args.getJourneyTimesConfig().get()) : new ExpectedJourneyProvider();
+
+        DelayFilter delayFilter = new DelayFilter(expectedJourneyProvider, args.getMinimumDelay());
+
         JourneyReporter journeyReporter = new JourneyReporter();
-        MindTheDelay mindTheDelay = new MindTheDelay(journeyParser, delayFilter, journeyReporter);
+
+        MindTheDelay mindTheDelay = new MindTheDelay(journeyParser, expectedJourneyProvider, delayFilter, journeyReporter);
 
         mindTheDelay.showDelayedJourneys();
     }
@@ -52,7 +56,7 @@ public class Main {
     }
 
     private static void printUsage(CmdLineParser cmdLineParser, PrintStream out) {
-        out.println("Usage:\n");
+        out.println("Usage: mind-the-delay [options] FILE\n");
         cmdLineParser.printUsage(out);
     }
 }

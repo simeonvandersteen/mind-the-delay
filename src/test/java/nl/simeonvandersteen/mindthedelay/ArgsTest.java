@@ -5,6 +5,9 @@ import org.junit.Test;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 
+import java.io.File;
+import java.util.Optional;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -23,22 +26,23 @@ public class ArgsTest {
 
     @Test
     public void itProvidesDefaultArgs() throws Exception {
-        String[] rawArgs = new String[]{"-c", JOURNEY_TIMES_PATH, "-j", JOURNEY_HISTORY_PATH};
+        String[] rawArgs = new String[]{JOURNEY_HISTORY_PATH};
 
         cmdLineParser.parseArgument(rawArgs);
 
-        assertThat(args.getJourneyTimesConfig().getAbsolutePath(), is(JOURNEY_TIMES_PATH));
         assertThat(args.getJourneyHistory().getAbsolutePath(), is(JOURNEY_HISTORY_PATH));
-        assertThat(args.getMinimumDelay().getSeconds(), is(15 * 60L));
+        assertThat(args.getJourneyTimesConfig(), is(Optional.empty()));
+        assertThat(args.getMinimumDelay().toMinutes(), is(15L));
     }
 
     @Test
     public void itOverridesDefaultArgs() throws Exception {
-        String[] rawArgs = new String[]{"-c", JOURNEY_TIMES_PATH, "-j", JOURNEY_HISTORY_PATH, "-m", "10"};
+        String[] rawArgs = new String[]{"-c", JOURNEY_TIMES_PATH, "-m", "10", JOURNEY_HISTORY_PATH};
 
         cmdLineParser.parseArgument(rawArgs);
 
-        assertThat(args.getMinimumDelay().getSeconds(), is(10 * 60L));
+        assertThat(args.getJourneyTimesConfig(), is(Optional.of(new File(JOURNEY_TIMES_PATH))));
+        assertThat(args.getMinimumDelay().toMinutes(), is(10L));
     }
 
     @Test(expected = CmdLineException.class)
