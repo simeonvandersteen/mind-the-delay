@@ -32,20 +32,20 @@ public class DelayFilterTest {
     }
 
     @Test
-    public void itReturnsDelayedJourneyIfDelayIsMoreThanMinimum() throws Exception {
+    public void itReturnsDelayedJourneyIfDelayIsAtLeastMinimum() throws Exception {
         Journey journey = new Journey(LocalDate.now(), LocalTime.NOON,
-                LocalTime.NOON.plusMinutes(JOURNEY_TIME + MINIMUM_DELAY + 1), "a", "b");
+                LocalTime.NOON.plusMinutes(JOURNEY_TIME + MINIMUM_DELAY), "a", "b");
 
         Optional<DelayedJourney> delayedJourney = underTest.getIfDelayed(journey);
 
         assertThat(delayedJourney.isPresent(), is(true));
-        assertThat(delayedJourney.get().getDelay(), is(Duration.ofMinutes(MINIMUM_DELAY + 1)));
+        assertThat(delayedJourney.get().getDelay(), is(Duration.ofMinutes(MINIMUM_DELAY)));
     }
 
     @Test
-    public void itReturnsNoDelayedJourneyIfDelayIsLessThanOrEqualToMinimum() throws Exception {
+    public void itReturnsNoDelayedJourneyIfDelayIsLessThanMinimum() throws Exception {
         Journey journey = new Journey(LocalDate.now(), LocalTime.NOON,
-                LocalTime.NOON.plusMinutes(JOURNEY_TIME + MINIMUM_DELAY), "a", "b");
+                LocalTime.NOON.plusMinutes(JOURNEY_TIME + MINIMUM_DELAY - 1), "a", "b");
 
         assertThat(underTest.getIfDelayed(journey).isPresent(), is(false));
     }
@@ -53,7 +53,7 @@ public class DelayFilterTest {
     @Test
     public void itReturnsNoJourneyIfNotConfigured() throws Exception {
         Journey journey = new Journey(LocalDate.now(), LocalTime.NOON,
-                LocalTime.NOON.plusMinutes(JOURNEY_TIME + MINIMUM_DELAY + 1), "a", "d");
+                LocalTime.NOON.plusMinutes(JOURNEY_TIME + MINIMUM_DELAY), "a", "d");
 
         assertThat(underTest.getIfDelayed(journey).isPresent(), is(false));
     }

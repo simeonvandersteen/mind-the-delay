@@ -3,6 +3,7 @@ package nl.simeonvandersteen.mindthedelay.domain;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Journey {
 
@@ -71,12 +72,15 @@ public class Journey {
 
     @Override
     public String toString() {
-        return "Journey{" +
-                "date=" + date +
-                ", start=" + start +
-                ", end=" + end +
-                ", origin='" + origin + '\'' +
-                ", destination='" + destination + '\'' +
-                '}';
+        return String.format("Start: %s\n" +
+                        "Finish: %s\n" +
+                        "Date: %s\n" +
+                        "Time: %s - %s\n" +
+                        "Duration: %s",
+                origin, destination,
+                date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                start.toString(), end.toString(),
+                LocalTime.MIN.plus(getDuration()).toString()
+        );
     }
 }

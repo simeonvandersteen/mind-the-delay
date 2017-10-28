@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.Duration;
 
-//TODO should extend journey?
 public class ExpectedJourney {
 
     private String origin;
@@ -29,7 +28,12 @@ public class ExpectedJourney {
         return destination;
     }
 
-    public Duration getJourneyTime() {
+    public Duration getDuration() {
         return Duration.ofMinutes(journeyTime);
+    }
+
+    public boolean matches(Journey journey) {
+        return origin.equals(journey.getOrigin()) && destination.equals(journey.getDestination()) ||
+                origin.equals(journey.getDestination()) && destination.equals(journey.getOrigin());
     }
 }

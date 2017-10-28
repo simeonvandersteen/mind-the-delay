@@ -9,8 +9,6 @@ import java.io.PrintStream;
 
 public class Main {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Main.class);
-
     private void run(Args args) {
         JourneyParser journeyParser = new JourneyParser(args.getJourneyHistory());
         DelayFilter delayFilter = DelayFilter.fromJson(args.getJourneyTimesConfig(), args.getMinimumDelay());
@@ -27,7 +25,7 @@ public class Main {
             new Main().run(args);
 
         } catch (Throwable e) {
-            LOG.error(e.getMessage());
+            System.err.println(e.getMessage());
             System.exit(1);
         }
     }

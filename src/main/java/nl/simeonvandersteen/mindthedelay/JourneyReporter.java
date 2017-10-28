@@ -6,9 +6,7 @@ import org.slf4j.LoggerFactory;
 
 public class JourneyReporter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JourneyReporter.class);
-
     public void report(Journey journey) {
-        LOG.info("Delayed journey: {}", journey.toString());
+        System.out.println(String.format("Delayed journey:\n%s\n", journey.toString()));
     }
 }

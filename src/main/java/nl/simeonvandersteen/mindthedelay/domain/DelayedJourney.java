@@ -1,6 +1,7 @@
 package nl.simeonvandersteen.mindthedelay.domain;
 
 import java.time.Duration;
+import java.time.LocalTime;
 
 public class DelayedJourney extends Journey {
 
@@ -13,5 +14,14 @@ public class DelayedJourney extends Journey {
 
     public Duration getDelay() {
         return delay;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s\nDelay: %s (expected journey time: %s)",
+                super.toString(),
+                LocalTime.MIN.plus(delay).toString(),
+                LocalTime.MIN.plus(getDuration()).minus(delay).toString()
+        );
     }
 }
