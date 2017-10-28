@@ -1,0 +1,12 @@
+[
+  {
+    "origin": "a",
+    "destination": "b",
+    "journey_time": 10
+  },
+  {
+    "origin": "c",
+    "destination": "b",
+    "journey_time": 5
+  }
+]
