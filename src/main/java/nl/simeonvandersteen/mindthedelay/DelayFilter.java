@@ -53,12 +53,12 @@ public class DelayFilter {
                 .findFirst();
     }
 
-    public static DelayFilter fromJson(File config, int minimumDelay) {
+    public static DelayFilter fromJson(File config, Duration minimumDelay) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             List<ExpectedJourney> expectedJourneys = mapper.readValue(config, new TypeReference<List<ExpectedJourney>>() {
             });
-            return new DelayFilter(expectedJourneys, Duration.ofMinutes(minimumDelay));
+            return new DelayFilter(expectedJourneys, minimumDelay);
         } catch (IOException e) {
             throw new RuntimeException("Failed loading configuration file: " + e.getMessage());
         }

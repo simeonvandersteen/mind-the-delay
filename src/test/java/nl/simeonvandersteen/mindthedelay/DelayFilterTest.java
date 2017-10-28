@@ -62,12 +62,12 @@ public class DelayFilterTest {
     public void itParsesExpectedJourneyTimesConfig() throws Exception {
         File configFile = new File(getClass().getClassLoader().getResource("expected-journey-times.json").getFile());
 
-        assertNotNull(DelayFilter.fromJson(configFile, MINIMUM_DELAY));
+        assertNotNull(DelayFilter.fromJson(configFile, Duration.ofMinutes(MINIMUM_DELAY)));
     }
 
     @Test(expected = RuntimeException.class)
     public void itThrowsIfIncorrectSyntaxInConfigFile() throws Exception {
 
-        assertNotNull(DelayFilter.fromJson(new File("no-json"), MINIMUM_DELAY));
+        assertNotNull(DelayFilter.fromJson(new File("no-json"), Duration.ofMinutes(MINIMUM_DELAY)));
     }
 }

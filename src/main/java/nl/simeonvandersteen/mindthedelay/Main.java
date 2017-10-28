@@ -1,36 +1,60 @@
 package nl.simeonvandersteen.mindthedelay;
 
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.util.Arrays;
+import java.io.PrintStream;
 
 public class Main {
 
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
-    private void run(String[] args) {
-        if (args.length < 2) {
-            throw new RuntimeException("Missing cli arguments");
-        }
-
-        JourneyParser journeyParser = new JourneyParser(new File(args[1]));
-        DelayFilter delayFilter = DelayFilter.fromJson(new File(args[0]), 15);
+    private void run(Args args) {
+        JourneyParser journeyParser = new JourneyParser(args.getJourneyHistory());
+        DelayFilter delayFilter = DelayFilter.fromJson(args.getJourneyTimesConfig(), args.getMinimumDelay());
         JourneyReporter journeyReporter = new JourneyReporter();
         MindTheDelay mindTheDelay = new MindTheDelay(journeyParser, delayFilter, journeyReporter);
 
         mindTheDelay.showDelayedJourneys();
     }
 
-    public static void main(String[] args) {
-        LOG.info("Starting with cli arguments: " + Arrays.toString(args));
+    public static void main(String[] rawArgs) {
+        Args args = parseArgs(rawArgs);
+
         try {
             new Main().run(args);
+
         } catch (Throwable e) {
             LOG.error(e.getMessage());
             System.exit(1);
         }
-        LOG.info("Done.");
+    }
+
+    private static Args parseArgs(String[] rawArgs) {
+        Args args = new Args();
+        CmdLineParser cmdLineParser = new CmdLineParser(args);
+
+        try {
+            cmdLineParser.parseArgument(rawArgs);
+
+        } catch (CmdLineException e) {
+            System.err.println(e.getMessage() + "\n");
+            printUsage(cmdLineParser, System.err);
+            System.exit(1);
+        }
+
+        if (args.showUsage()) {
+            printUsage(cmdLineParser, System.out);
+            System.exit(0);
+        }
+
+        return args;
+    }
+
+    private static void printUsage(CmdLineParser cmdLineParser, PrintStream out) {
+        out.println("Usage:\n");
+        cmdLineParser.printUsage(out);
     }
 }
