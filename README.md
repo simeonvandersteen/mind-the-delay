@@ -23,7 +23,7 @@ If you know that a certain journey can be done faster than you've been able to i
 you can provide a JSON file with journey times (in minutes) which well then be used instead. Use `-c some-file.json` as
 command line option with a file that looks like this:
 
-```json
+```
 [
   {
     "origin": "Oxford Circus",
@@ -38,6 +38,6 @@ command line option with a file that looks like this:
 
 ### Known issues
 
-#####I get `Exception in thread "main" javax.net.ssl.SSLHandshakeException: ...` when running Gradle
+_I get `Exception in thread "main" javax.net.ssl.SSLHandshakeException: ...` when running Gradle_
 
 This is a problem with OpenJDK and Gradle. Either upgrade OpenJDK or use Oracle JDK.
