@@ -58,8 +58,7 @@ public class ExpectedJourneyProvider {
         }
     }
 
-    @Override
-    public String toString() {
+    public String getExpectedJourneyTimes() {
         return expectedJourneys.stream().map(ExpectedJourney::toString).collect(Collectors.joining("\n"));
     }
 

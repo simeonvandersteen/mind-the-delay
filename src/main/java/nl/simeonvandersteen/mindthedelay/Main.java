@@ -17,7 +17,7 @@ public class Main {
 
         JourneyReporter journeyReporter = new JourneyReporter();
 
-        MindTheDelay mindTheDelay = new MindTheDelay(journeyParser, expectedJourneyProvider, delayFilter, journeyReporter);
+        MindTheDelay mindTheDelay = new MindTheDelay(args, journeyParser, expectedJourneyProvider, delayFilter, journeyReporter);
 
         mindTheDelay.showDelayedJourneys();
     }

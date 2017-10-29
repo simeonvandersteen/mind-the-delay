@@ -6,12 +6,14 @@ import java.util.Collection;
 
 public class MindTheDelay {
 
+    private final Args args;
     private final JourneyParser journeyParser;
     private final ExpectedJourneyProvider expectedJourneyProvider;
     private final DelayFilter delayFilter;
     private final JourneyReporter journeyReporter;
 
-    public MindTheDelay(JourneyParser journeyParser, ExpectedJourneyProvider expectedJourneyProvider, DelayFilter delayFilter, JourneyReporter journeyReporter) {
+    public MindTheDelay(Args args, JourneyParser journeyParser, ExpectedJourneyProvider expectedJourneyProvider, DelayFilter delayFilter, JourneyReporter journeyReporter) {
+        this.args = args;
         this.journeyParser = journeyParser;
         this.expectedJourneyProvider = expectedJourneyProvider;
         this.delayFilter = delayFilter;
@@ -21,10 +23,17 @@ public class MindTheDelay {
     public void showDelayedJourneys() {
         Collection<Journey> journeys = journeyParser.parse();
 
+        if (journeys.isEmpty()) {
+            System.out.println("No journeys were parsed from CSV file.");
+            return;
+        }
+
         journeys.forEach(expectedJourneyProvider::analyse);
 
-        System.out.println(expectedJourneyProvider.toString());
-        System.out.println();
+        if (args.showExpectedJourneyTimes()) {
+            System.out.println(expectedJourneyProvider.getExpectedJourneyTimes());
+            System.out.println();
+        }
 
         journeys.forEach(journey -> delayFilter.getIfDelayed(journey).ifPresent(journeyReporter::report));
     }

@@ -15,6 +15,9 @@ public class Args {
     @Option(name = "-m", aliases = "--minimum-delay", usage = "Minimum delay in minutes for a journey to be considered as delayed")
     private int minimumDelay = 15;
 
+    @Option(name = "-s", aliases = "--show-expected-journey-times", usage = "Show fastest journey times from journey history")
+    private boolean showExpectedJourneyTimes = false;
+
     @Option(name = "-h", aliases = "--help", help = true, hidden = true)
     private boolean showUsage = false;
 
@@ -35,5 +38,9 @@ public class Args {
 
     public boolean showUsage() {
         return showUsage;
+    }
+
+    public boolean showExpectedJourneyTimes() {
+        return showExpectedJourneyTimes;
     }
 }

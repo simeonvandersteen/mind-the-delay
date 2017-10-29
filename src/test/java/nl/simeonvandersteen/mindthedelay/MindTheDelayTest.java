@@ -2,7 +2,6 @@ package nl.simeonvandersteen.mindthedelay;
 
 import com.google.common.collect.ImmutableList;
 import nl.simeonvandersteen.mindthedelay.domain.DelayedJourney;
-import nl.simeonvandersteen.mindthedelay.domain.ExpectedJourney;
 import nl.simeonvandersteen.mindthedelay.domain.Journey;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +21,8 @@ public class MindTheDelayTest {
     private MindTheDelay underTest;
 
     @Mock
+    Args args;
+    @Mock
     private JourneyParser journeyParser;
     @Mock
     private ExpectedJourneyProvider expectedJourneyProvider;
@@ -32,7 +33,7 @@ public class MindTheDelayTest {
 
     @Before
     public void setUp() throws Exception {
-        underTest = new MindTheDelay(journeyParser, expectedJourneyProvider, delayFilter, journeyReporter);
+        underTest = new MindTheDelay(args, journeyParser, expectedJourneyProvider, delayFilter, journeyReporter);
     }
 
     @Test
@@ -67,6 +68,7 @@ public class MindTheDelayTest {
         inOrder.verify(expectedJourneyProvider).analyse(journey2);
         inOrder.verify(delayFilter).getIfDelayed(journey1);
         inOrder.verify(delayFilter).getIfDelayed(journey2);
+        verify(expectedJourneyProvider, times(0)).getExpectedJourneyTimes();
     }
 
     @Test
@@ -75,6 +77,7 @@ public class MindTheDelayTest {
 
         underTest.showDelayedJourneys();
 
+        verifyZeroInteractions(expectedJourneyProvider);
         verifyZeroInteractions(journeyReporter);
     }
 
@@ -91,5 +94,18 @@ public class MindTheDelayTest {
         underTest.showDelayedJourneys();
 
         verifyZeroInteractions(journeyReporter);
+    }
+
+    @Test
+    public void itReportsExpectedJourneyTimes() throws Exception {
+        Journey journey = mock(Journey.class);
+
+        when(journeyParser.parse()).thenReturn(ImmutableList.of(journey));
+        when(delayFilter.getIfDelayed(journey)).thenReturn(Optional.empty());
+        when(args.showExpectedJourneyTimes()).thenReturn(true);
+
+        underTest.showDelayedJourneys();
+
+        verify(expectedJourneyProvider).getExpectedJourneyTimes();
     }
 }
