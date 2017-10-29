@@ -1,18 +1,31 @@
+buildscript {
+    repositories { jcenter() }
+}
 
-apply plugin: 'java'
-apply plugin: 'application'
+plugins {
+    id 'java'
+    id 'application'
+    id 'nebula.lint' version '8.3.1'
+}
 
 repositories {
     jcenter()
 }
 
 dependencies {
-    compile 'com.google.guava:guava:22.0'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.9.2'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.2'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.0'
     compile 'args4j:args4j:2.33'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.11.0'
+    testCompile 'org.hamcrest:hamcrest-core:1.3'
+    testCompile 'com.google.guava:guava:22.0'
+}
+
+gradleLint {
+    rules  = ['all-dependency']
 }
 
 mainClassName = 'nl.simeonvandersteen.mindthedelay.Main'
