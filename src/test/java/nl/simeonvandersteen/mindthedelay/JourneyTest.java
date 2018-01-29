@@ -19,6 +19,16 @@ public class JourneyTest {
 
         Journey underTest = new Journey(LocalDate.now(), start, end, "bla", "bla");
 
-        assertThat(underTest.getDuration(), is(Duration.between(start, end)));
+        assertThat(underTest.getDuration(), is(Duration.ofMinutes(121)));
+    }
+
+    @Test
+    public void itCalculatesDurationAfterMidnight() throws Exception {
+        LocalTime start = LocalTime.of(23, 51);
+        LocalTime end = LocalTime.of(0, 12);
+
+        Journey underTest = new Journey(LocalDate.now(), start, end, "bla", "bla");
+
+        assertThat(underTest.getDuration(), is(Duration.ofMinutes(21)));
     }
 }

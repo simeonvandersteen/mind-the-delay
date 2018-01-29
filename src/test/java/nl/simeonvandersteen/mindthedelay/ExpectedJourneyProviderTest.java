@@ -15,6 +15,7 @@ import static org.junit.Assert.assertThat;
 
 public class ExpectedJourneyProviderTest {
 
+    public static final LocalTime SOME_TIME = LocalTime.NOON;
     private Journey journey;
 
     private ExpectedJourneyProvider underTest;
@@ -23,12 +24,12 @@ public class ExpectedJourneyProviderTest {
     public void setUp() throws Exception {
         underTest = new ExpectedJourneyProvider();
 
-        journey = new Journey(LocalDate.now(), LocalTime.NOON, LocalTime.NOON.plusMinutes(10), "a", "b");
+        journey = new Journey(LocalDate.now(), SOME_TIME, SOME_TIME.plusMinutes(10), "a", "b");
     }
 
     @Test
     public void itReturnsExpectedJourney() throws Exception {
-        Journey someOtherJourney = new Journey(LocalDate.now(), LocalTime.NOON, LocalTime.NOON.plusMinutes(15), "b", "c");
+        Journey someOtherJourney = new Journey(LocalDate.now(), SOME_TIME, SOME_TIME.plusMinutes(15), "b", "c");
 
         underTest.analyse(someOtherJourney);
         underTest.analyse(journey);
@@ -42,7 +43,7 @@ public class ExpectedJourneyProviderTest {
 
     @Test
     public void itReturnsShortestExpectedJourney() throws Exception {
-        Journey shorterJourney = new Journey(LocalDate.now(), LocalTime.NOON, LocalTime.NOON.plusMinutes(5), "a", "b");
+        Journey shorterJourney = new Journey(LocalDate.now(), SOME_TIME, SOME_TIME.plusMinutes(5), "a", "b");
 
         underTest.analyse(journey);
         underTest.analyse(shorterJourney);

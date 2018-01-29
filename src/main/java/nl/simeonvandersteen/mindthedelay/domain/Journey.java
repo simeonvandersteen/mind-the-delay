@@ -43,6 +43,9 @@ public class Journey {
     }
 
     public Duration getDuration() {
+        if (Duration.between(start, end).isNegative())
+            return Duration.between(start, end).plus(Duration.ofDays(1));
+
         return Duration.between(start, end);
     }
 
